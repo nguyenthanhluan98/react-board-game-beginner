@@ -51,3 +51,10 @@ ol, ul {
 .square--winning {
   background-color: yellow;
 }
+.status {
+  background-color: antiquewhite;
+}
+
+.currentMove {
+  background-color: red;
+}

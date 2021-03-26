@@ -14,7 +14,6 @@ import reportWebVitals from './reportWebVitals';
   }
   
   class Board extends React.Component {
-
     constructor(props) {
       super(props);
       this.state = {
@@ -24,34 +23,45 @@ import reportWebVitals from './reportWebVitals';
         stepNumber: 0,
         xIsNext: true
       };
-    
     }
-
 
     renderSquare(i) {
       return (
         <Square 
           isWinning={this.props.winningSquares.includes(i)}
-          key={i}  
+          key={"square " + i}  
           value={this.props.squares[i]}
           onClick={() => this.props.onClick(i)} 
         />
       );
     }
 
+    // render squares then 1 row 3 column render rows
+    // in render rows push render squares in this
+
+    renderSquares(n) {
+      let squares = [];
+      for(let i = n; i < n + 3; i++) {
+        squares.push(this.renderSquare(i));
+      }
+
+      return squares;
+    }
+
+    renderRows(i) {
+      return (
+        <div className="board-row">
+            {this.renderSquares(i)}
+        </div>
+      );
+    }
+
     render() {
       return (
         <div>
-          {
-              [...Array(3)].map((_, i) => (
-                <div key={i} className="board-row">
-                  {
-                     [...Array(3)].map((_, j) => this.renderSquare(3*i + j))
-                  }
-                </div>
-              ))
-
-          }
+           {this.renderRows(0)}
+           {this.renderRows(3)}
+           {this.renderRows(6)}
         </div>
       );
     }
@@ -94,26 +104,34 @@ import reportWebVitals from './reportWebVitals';
     }
 
 
-    render() {
+    render() {   
       const history = this.state.history;
       const current = history[this.state.stepNumber];
       const winner = calculateWinner(current.squares);
 
       const moves = history.map((step, move) => {
           const desc = move ? 'Go to move #' + move: 'Go to game start';
+          // 3. Bold the currently selected item in the move list.
+          // let className;
+          // if(move === this.state.stepNumber) {
+          //   className = "currentMove";
+          // }
           return (
             <li key={move}>
-              <button onClick={() => this.jumpTo(move)}>{desc}</button>
+              <button onClick={() => this.jumpTo(move)}>{move == this.state.stepNumber ? <b>{desc}</b> : desc}</button>
             </li>
           );
       });
-  
+      // 6. When no one wins, display a message about the result being a draw.
+      // check stepNumber if stepNumber is max but no one win, will show message draw
       let status;
       if (winner) {
         status = 'Winner: ' + winner.player;
        
-      } else {
+      } else if (this.state.stepNumber !== 9) {
         status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+      } else {
+        status = 'Draw';
       }
   
       return (
@@ -126,7 +144,7 @@ import reportWebVitals from './reportWebVitals';
             />
           </div>
           <div className="game-info">
-            <div>{status}</div>
+            <div className="status">{status}</div>
             <ol>{moves}</ol>
           </div>
         </div>
@@ -135,11 +153,6 @@ import reportWebVitals from './reportWebVitals';
   }
   
   // ========================================
-  
-  ReactDOM.render(
-    <Game />,
-    document.getElementById('root')
-  );
   
   function calculateWinner(squares) {
     const lines = [
@@ -165,7 +178,6 @@ import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <Game />,
-  //<ShoppingList name="Luan" />,
   document.getElementById('root')
 );
 
