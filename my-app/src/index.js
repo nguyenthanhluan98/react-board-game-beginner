@@ -116,6 +116,7 @@ import reportWebVitals from './reportWebVitals';
           // if(move === this.state.stepNumber) {
           //   className = "currentMove";
           // }
+          //asdadas
           return (
             <li key={move}>
               <button onClick={() => this.jumpTo(move)}>{move == this.state.stepNumber ? <b>{desc}</b> : desc}</button>
